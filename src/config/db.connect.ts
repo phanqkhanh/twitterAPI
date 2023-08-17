@@ -1,6 +1,8 @@
 import { MongoClient, Db, Collection } from 'mongodb'
 import dotenv from 'dotenv'
 import User from '~/models/schemas/User.schema'
+import RefreshToken from '~/models/schemas/Register.schema'
+import Follower from '~/models/schemas/Follower.schema'
 
 dotenv.config()
 const url = process.env.DB_CONNECTION_STRING as string
@@ -13,7 +15,7 @@ class Database {
   }
   async connect() {
     try {
-      this.db.command({ ping: 1 })
+      await this.db.command({ ping: 1 })
       console.log('Connected successfully to database')
     } catch (error) {
       console.log(error)
@@ -21,6 +23,12 @@ class Database {
   }
   get users(): Collection<User> {
     return this.db.collection('users')
+  }
+  get refreshTokens(): Collection<RefreshToken> {
+    return this.db.collection('refreshTokens')
+  }
+  get followers(): Collection<Follower> {
+    return this.db.collection('followers')
   }
 }
 const database = new Database()
