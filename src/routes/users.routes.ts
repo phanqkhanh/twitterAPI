@@ -14,7 +14,7 @@ import {
   unFollowController,
   updateProfileController,
   verifyCodeController
-} from '~/controllers/user.controllers'
+} from '~/controllers/users.controllers'
 import {
   loginValidator,
   accessTokenValidator,
@@ -31,34 +31,34 @@ import {
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
 
-const router = Router()
+const userRouter = Router()
 
-router.post('/login', loginValidator, wrapRequestHandler(loginController))
-router.get('/oauth/google', wrapRequestHandler(oauthController))
-router.post('/register', registerValidator, wrapRequestHandler(registerController))
-router.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(logoutController))
-router.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(emailVerifyController))
-router.post('/resend-verify-email', accessTokenValidator, wrapRequestHandler(resendEmailVerifyController))
-router.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(forgotPasswordController))
-router.post('/verify-code', verifyCodeValidator, wrapRequestHandler(verifyCodeController))
-router.post('/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController))
-router.get('/profile', accessTokenValidator, verifiedUser, wrapRequestHandler(profileController))
-router.put(
+userRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
+userRouter.get('/oauth/google', wrapRequestHandler(oauthController))
+userRouter.post('/register', registerValidator, wrapRequestHandler(registerController))
+userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(logoutController))
+userRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(emailVerifyController))
+userRouter.post('/resend-verify-email', accessTokenValidator, wrapRequestHandler(resendEmailVerifyController))
+userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(forgotPasswordController))
+userRouter.post('/verify-code', verifyCodeValidator, wrapRequestHandler(verifyCodeController))
+userRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController))
+userRouter.get('/profile', accessTokenValidator, verifiedUser, wrapRequestHandler(profileController))
+userRouter.put(
   '/update-profile',
   accessTokenValidator,
   verifiedUser,
   updateProfileValidator,
   wrapRequestHandler(updateProfileController)
 )
-router.post('/follow', accessTokenValidator, verifiedUser, followValidator, wrapRequestHandler(followController))
-router.delete(
+userRouter.post('/follow', accessTokenValidator, verifiedUser, followValidator, wrapRequestHandler(followController))
+userRouter.delete(
   '/un-follow/:follower_id',
   accessTokenValidator,
   verifiedUser,
   followValidator,
   wrapRequestHandler(unFollowController)
 )
-router.put(
+userRouter.put(
   '/change-password',
   accessTokenValidator,
   verifiedUser,
@@ -66,4 +66,4 @@ router.put(
   wrapRequestHandler(changePasswordController)
 )
 
-export default router
+export default userRouter

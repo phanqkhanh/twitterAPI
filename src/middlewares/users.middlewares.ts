@@ -1,7 +1,7 @@
+import { config } from 'dotenv'
 import { NextFunction, Request, Response } from 'express'
 import { checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
-import { env } from 'process'
 import database from '~/config/db.connect'
 import { UserVerifyStatus } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
@@ -11,6 +11,7 @@ import usersService from '~/services/users.services'
 import { hashPassword } from '~/utils/crypto'
 import { signToken, verifyToken } from '~/utils/jwt'
 import { validate } from '~/utils/validation'
+config()
 
 const passwordSchema = {
   notEmpty: {
