@@ -12,6 +12,8 @@ import { signToken } from '~/utils/jwt'
 import axios from 'axios'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatus'
+import { config } from 'dotenv'
+config()
 
 class UsersService {
   private signAccessToken(user_id: string, verifyStatus: number) {

@@ -1,3 +1,4 @@
+import { config } from 'dotenv'
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
@@ -8,6 +9,7 @@ import { USERS_MESSAGE } from '~/constants/messages'
 import { RegisterReqBody, UpdateProfileReqBody } from '~/models/requests/User.requests'
 import User from '~/models/schemas/User.schema'
 import usersService from '~/services/users.services'
+config()
 
 const loginController = async (req: Request, res: Response) => {
   const user = req.user as User
