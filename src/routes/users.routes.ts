@@ -8,6 +8,7 @@ import {
   logoutController,
   oauthController,
   profileController,
+  refreshTokenController,
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
@@ -37,6 +38,7 @@ userRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
 userRouter.get('/oauth/google', wrapRequestHandler(oauthController))
 userRouter.post('/register', registerValidator, wrapRequestHandler(registerController))
 userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(logoutController))
+userRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
 userRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(emailVerifyController))
 userRouter.post('/resend-verify-email', accessTokenValidator, wrapRequestHandler(resendEmailVerifyController))
 userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(forgotPasswordController))

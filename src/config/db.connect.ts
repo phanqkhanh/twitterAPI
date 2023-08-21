@@ -21,6 +21,27 @@ class Database {
       console.log(error)
     }
   }
+  //
+  async indexUsers() {
+    const exists = await this.users.indexExists(['email_1', 'email_1_password_1'])
+    if (!exists) {
+      this.users.createIndex({ email: 1, password: 1 })
+      this.users.createIndex({ email: 1 }, { unique: true })
+      // this.users.createIndex({ username: 1},{ unique: true})
+    }
+  }
+  async indexRefreshTokens() {
+    const exists = await this.users.indexExists(['token_1'])
+    if (!exists) {
+      this.refreshTokens.createIndex({ token: 1 })
+    }
+  }
+  async indexFollowers() {
+    const exists = await this.users.indexExists(['user_id_1_follower_id_1'])
+    if (!exists) {
+      this.followers.createIndex({ user_id: 1, follower_id: 1 })
+    }
+  }
   get users(): Collection<User> {
     return this.db.collection('users')
   }
