@@ -8,11 +8,12 @@ import Follower from '~/models/schemas/Follower.schema'
 import RefreshToken from '~/models/schemas/Register.schema'
 import User from '~/models/schemas/User.schema'
 import { generateRandomCode } from '~/utils/crypto'
-import { signToken } from '~/utils/jwt'
+import { signToken, verifyToken } from '~/utils/jwt'
 import axios from 'axios'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { config } from 'dotenv'
+import { sendEmail } from '~/utils/email'
 config()
 
 class UsersService {
@@ -101,6 +102,14 @@ class UsersService {
         token: refresh_token as string
       })
     )
+    sendEmail(
+      payload.email,
+      'Verify your email',
+      `
+        <h1>Verify your email</h1>
+        <p>Click <a href="${process.env.CLIENT_URL}/verify-email?token=${email_verify_token}">here</a> to verify your email</p>
+      `
+    )
     return {
       access_token,
       refresh_token
@@ -123,6 +132,28 @@ class UsersService {
     await database.refreshTokens.deleteOne({ token: refresh_token })
     return {
       message: 'Logout success'
+    }
+  }
+
+  async refreshToken(user_id: string, old_refresh_token: string) {
+    const decoded_refresh_token = await verifyToken({
+      token: old_refresh_token,
+      secret: process.env.JWT_SECRET_REFRESH_TOKEN as string
+    })
+    const [token] = await Promise.all([
+      this.getTokenAndRefreshToken(user_id, decoded_refresh_token.verify as number),
+      database.refreshTokens.deleteOne({ token: old_refresh_token })
+    ])
+    const [access_token, refresh_token] = token
+    await database.refreshTokens.insertOne(
+      new RefreshToken({
+        user_id: new ObjectId(user_id),
+        token: refresh_token as string
+      })
+    )
+    return {
+      access_token,
+      refresh_token
     }
   }
 
@@ -207,7 +238,7 @@ class UsersService {
     }
   }
 
-  async resendEmailVerify(user_id: string, verify: number) {
+  async resendEmailVerify(user_id: string, verify: number, email: string) {
     const email_verify_token = await this.signEmailVerifyToken(user_id, verify)
     //nơi gửi email
     await database.users.updateOne(
@@ -218,6 +249,14 @@ class UsersService {
           updated_at: true
         }
       }
+    )
+    sendEmail(
+      email,
+      'Verify your email',
+      `
+        <h1>Verify your email</h1>
+        <p>Click <a href="${process.env.CLIENT_URL}/verify-email?token=${email_verify_token}">here</a> to verify your email</p>
+      `
     )
     return { message: 'Resend email successfully' }
   }
@@ -234,8 +273,16 @@ class UsersService {
         }
       }
     )
+    sendEmail(
+      email,
+      'Forgot Password',
+      `
+        <h1>Forgot Password</h1>
+        <p>Your verification code is ${randomCode}</p>
+      `
+    )
     return {
-      message: 'Send code forgot password to email success ' + randomCode
+      message: 'Send code forgot password to email success'
     }
   }
 

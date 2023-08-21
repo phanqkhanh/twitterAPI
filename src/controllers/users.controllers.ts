@@ -54,6 +54,12 @@ const logoutController = async (req: Request, res: Response) => {
   return res.json(result)
 }
 
+const refreshTokenController = async (req: Request, res: Response) => {
+  const { user_id, refresh_token } = req.body
+  const result = await usersService.refreshToken(user_id, refresh_token)
+  return res.json(result)
+}
+
 const emailVerifyController = async (req: Request, res: Response) => {
   const { _id, verify } = req.body.user
   const result = await usersService.emailVerify(_id, verify)
@@ -74,7 +80,7 @@ const resendEmailVerifyController = async (req: Request, res: Response) => {
     return res.json({ message: USERS_MESSAGE.EMAIL_HAS_BEEN_VERIFIED })
   }
 
-  const result = await usersService.resendEmailVerify(user._id.toString(), verify)
+  const result = await usersService.resendEmailVerify(user._id.toString(), verify, user.email)
   return res.json(result)
 }
 
@@ -129,6 +135,7 @@ export {
   loginController,
   registerController,
   logoutController,
+  refreshTokenController,
   emailVerifyController,
   resendEmailVerifyController,
   forgotPasswordController,

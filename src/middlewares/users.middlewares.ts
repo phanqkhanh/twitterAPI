@@ -196,6 +196,7 @@ export const refreshTokenValidator = validate(
                 status: HTTP_STATUS.UNAUTHORIZED
               })
             }
+            req.body.user_id = refreshToken.user_id
             return true
           }
         }
