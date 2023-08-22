@@ -10,6 +10,7 @@ import { ErrorWithStatus } from '~/models/Errors'
 import usersService from '~/services/users.services'
 import { hashPassword } from '~/utils/crypto'
 import { signToken, verifyToken } from '~/utils/jwt'
+import log from '~/utils/log'
 import { validate } from '~/utils/validation'
 config()
 
@@ -160,7 +161,6 @@ export const accessTokenValidator = validate(
                 status: HTTP_STATUS.UNAUTHORIZED
               })
             }
-
             const decoded_authorization = await verifyToken({
               token: access_token,
               secret: process.env.JWT_SECRET_ACCESS_TOKEN as string

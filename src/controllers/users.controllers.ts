@@ -15,7 +15,7 @@ const loginController = async (req: Request, res: Response) => {
   const user = req.user as User
   const user_id = user._id?.toString()
   const result = await usersService.login(user_id as string, user.verify)
-  return res.status(200).json({ msg: 'Login success', status: 'success', result })
+  return res.status(200).json({ message: 'Login success', data: result })
 }
 
 const oauthController = async (req: Request, res: Response) => {
@@ -42,9 +42,8 @@ const registerController = async (
 ) => {
   const result = await usersService.register(req.body)
   return res.status(200).json({
-    msg: 'Register success',
-    status: 'success',
-    result
+    message: 'Register success',
+    data: result
   })
 }
 
@@ -57,16 +56,18 @@ const logoutController = async (req: Request, res: Response) => {
 const refreshTokenController = async (req: Request, res: Response) => {
   const { user_id, refresh_token } = req.body
   const result = await usersService.refreshToken(user_id, refresh_token)
-  return res.json(result)
+  return res.json({
+    message: 'Refresh token success',
+    data: result
+  })
 }
 
 const emailVerifyController = async (req: Request, res: Response) => {
   const { _id, verify } = req.body.user
   const result = await usersService.emailVerify(_id, verify)
   return res.status(HTTP_STATUS.OK).json({
-    msg: 'Email verify success',
-    status: 'success',
-    ...result
+    message: 'Verify email  success',
+    data: result
   })
 }
 
