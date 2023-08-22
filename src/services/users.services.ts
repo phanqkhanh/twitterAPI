@@ -102,7 +102,7 @@ class UsersService {
         token: refresh_token as string
       })
     )
-    sendEmail(
+    await sendEmail(
       payload.email,
       'Verify your email',
       `
@@ -163,7 +163,7 @@ class UsersService {
       code,
       client_id: process.env.GOOGLE_CLIENT_ID,
       client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      redirect_uri: process.env.GOOGLe_REDIRECT_URL,
+      redirect_uri: process.env.GOOGLE_REDIRECT_URL,
       grant_type: 'authorization_code'
     }
     const { data } = await axios.post('https://oauth2.googleapis.com/token', body, {
@@ -250,7 +250,7 @@ class UsersService {
         }
       }
     )
-    sendEmail(
+    await sendEmail(
       email,
       'Verify your email',
       `
@@ -273,7 +273,7 @@ class UsersService {
         }
       }
     )
-    sendEmail(
+    await sendEmail(
       email,
       'Forgot Password',
       `

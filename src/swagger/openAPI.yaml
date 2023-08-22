@@ -1,0 +1,561 @@
+openapi: 3.0.3
+info:
+  title: Blog API
+  description: Liên hệ mình qua
+  # termsOfService: http://swagger.io/terms
+  contact:
+    name: Email - phanquockhanh9196@gmail.com
+    email: phanquockhanh9196@gmail.com
+  license:
+    name: Facebook
+    url: https://www.facebook.com/khanhphan877.vn
+  version: 1.0.0
+externalDocs:
+  description: Github
+  url: https://github.com/phanqkhanh
+servers:
+  - url: http://localhost:5000
+  # - url: https://petstore3.swagger.io/api/v3
+tags:
+  # - name: pet
+  #   description: Everything about your Pets
+  #   externalDocs:
+  #     description: Find out more
+  #     url: http://swagger.io
+  # - name: store
+  #   description: Access to Petstore orders
+  #   externalDocs:
+  #     description: Find out more about our store
+  #     url: http://swagger.io
+  - name: Users
+    description: Operations about user
+  - name: Upload
+    description: upload file
+paths:
+  /users/register:
+    post:
+      tags:
+        - Users
+      summary: Create user
+      operationId: createUser
+      requestBody:
+        description: Create user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        default:
+          description: Register successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Register success
+                  data:
+                    $ref: '#/components/schemas/AuthToken'
+  /users/login:
+    get:
+      tags:
+        - Users
+      summary: Login
+      operationId: login
+      requestBody:
+        description: Login user
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: khanh2@gmail.com
+                password:
+                  type: string
+                  example: Khanh@123
+        required: true
+      responses:
+        default:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful
+                  data:
+                    $ref: '#/components/schemas/AuthToken'
+  /users/logout:
+    post:
+      tags:
+        - Users
+      summary: Logout user
+      operationId: logoutUser
+      requestBody:
+        description: Logout user
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRkMjFkNDEyZjQwODQ0MzkwYjQ5ZTVjIiwidG9rZW5fdHlwZSI6MSwiaWF0IjoxNjkxNTUxOTQwLCJleHAiOjE3MDAxOTE5NDB9.OrA9l0u6A8YQVcpJ1VAOY9ga9HPLyuXgnHnGTvfq1Rc
+        required: true
+      responses:
+        default:
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout success
+      security:
+        - BearerAuth: []
+
+  /users/refresh-token:
+    post:
+      tags:
+        - Users
+      summary: Refresh token
+      operationId: refresh-token
+      requestBody:
+        description: Refresh token
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRkMjFkNDEyZjQwODQ0MzkwYjQ5ZTVjIiwidG9rZW5fdHlwZSI6MSwiaWF0IjoxNjkxNTUxOTQwLCJleHAiOjE3MDAxOTE5NDB9.OrA9l0u6A8YQVcpJ1VAOY9ga9HPLyuXgnHnGTvfq1Rc
+        required: true
+      responses:
+        default:
+          description: Refresh token successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Refresh successful
+                  data:
+                    $ref: '#/components/schemas/AuthToken'
+  /users/verify-email:
+    post:
+      tags:
+        - Users
+      summary: Verify email
+      operationId: verify-email
+      requestBody:
+        description: Verify email
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_verify_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRkMjFkNDEyZjQwODQ0MzkwYjQ5ZTVjIiwidG9rZW5fdHlwZSI6MSwiaWF0IjoxNjkxNTUxOTQwLCJleHAiOjE3MDAxOTE5NDB9.OrA9l0u6A8YQVcpJ1VAOY9ga9HPLyuXgnHnGTvfq1Rc
+        required: true
+      responses:
+        default:
+          description: Verify successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Verify email successful
+                  data:
+                    $ref: '#/components/schemas/AuthToken'
+  /users/resend-verify-email:
+    post:
+      tags:
+        - Users
+      summary: Resend email
+      operationId: resend-verify-email
+      responses:
+        default:
+          description: Resend email successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Resend email successful
+      security:
+        - BearerAuth: []
+  /users/forgot-password:
+    post:
+      tags:
+        - Users
+      summary: Forgot password
+      operationId: forgot-password
+      requestBody:
+        description: Forgot password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: khanh2@gmail.com
+        required: true
+      responses:
+        default:
+          description: Verify successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Send code success
+  /users/verify-code:
+    post:
+      tags:
+        - Users
+      summary: Verify code
+      operationId: verify-code
+      requestBody:
+        description: Verify code
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: khanh2@gmail.com
+                code:
+                  type: string
+                  example: 480187
+        required: true
+      responses:
+        default:
+          description: Verify successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Code is valid
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RlIjoiMTE4MzEyIiwiZW1haWwiOiJuZ3V5ZW52a2hhbmg3NThAZ21haWwuY29tIiwidG9rZW5fdHlwZSI6MiwidmVyaWZ5IjowLCJpYXQiOjE2OTI2Njk5NDgsImV4cCI6MTY5MjY3MDI0OH0.syMSI-oG-6TlMUl5emZbSNq3sLzS_LQvgehPwJ6rEG0
+  /users/reset-password:
+    post:
+      tags:
+        - Users
+      summary: Reset password
+      operationId: reset-password
+      requestBody:
+        description: Reset password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RlIjoiNDgwMTg3IiwiZW1haWwiOiJraGFuaDJAZ21haWwuY29tIiwidG9rZW5fdHlwZSI6MiwiaWF0IjoxNjkxOTkxNzM0LCJleHAiOjE2OTE5OTIwMzR9.UMoKU1dxlAOyOlASGYZQb9CXSp5uKEPq80AESrT6bgc
+                new_password:
+                  type: string
+                  example: Khanh@789
+                confirm_password:
+                  type: string
+                  example: Khanh@789
+        required: true
+      responses:
+        default:
+          description: Verify successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Reset password success
+  /users/change-password:
+    put:
+      tags:
+        - Users
+      summary: Change password
+      operationId: change-password
+      requestBody:
+        description: Change password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                  example: Khanh@123
+                new_password:
+                  type: string
+                  example: Khanh@789
+                confirm_password:
+                  type: string
+                  example: Khanh@789
+        required: true
+      responses:
+        default:
+          description: Verify password successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Change password success
+      security:
+        - BearerAuth: []
+  /users/follow:
+    post:
+      tags:
+        - Users
+      summary: Follow
+      operationId: follow
+      requestBody:
+        description: Follow
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                follower_id:
+                  type: string
+                  example: 64dae18f81688536a0f1b16d
+        required: true
+      responses:
+        default:
+          description: Follow success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Follow success
+      security:
+        - BearerAuth: []
+  /users/un-follow/{follower_id}:
+    delete:
+      tags:
+        - Users
+      summary: Un follow
+      operationId: un-follow
+      parameters:
+        - name: follower_id
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Un follow success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Un follow success
+      security:
+        - BearerAuth: []
+  /users/update-profile:
+    post:
+      tags:
+        - Users
+      summary: Follow
+      operationId: follow
+      requestBody:
+        description: Follow
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+        required: true
+      responses:
+        default:
+          description: Follow success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Follow success
+      security:
+        - BearerAuth: []
+  /users/profile:
+    get:
+      tags:
+        - Users
+      summary: Profile
+      operationId: profile
+      responses:
+        default:
+          description: Get profile success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Get profile success
+      security:
+        - BearerAuth: []
+
+  /medias/upload-video:
+    post:
+      tags:
+        - Upload
+      summary: Upload video
+      operationId: upload-video
+      requestBody:
+        description: Upload video
+        content:
+          form-data:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        default:
+          description: Upload video responses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Upload video success
+      security:
+        - BearerAuth: []
+  /medias/upload-image:
+    post:
+      tags:
+        - Upload
+      summary: Upload image
+      operationId: upload-image
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        default:
+          description: Upload image responses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Upload image success
+      security:
+        - BearerAuth: []
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+          example: theUser
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: '12345'
+        confirm_password:
+          type: string
+          example: '12345'
+        date_of_birth:
+          type: string
+          format: ISO 8601
+          example: '2023-08-08T10:46:56.996Z'
+    Profile:
+      type: object
+      properties:
+        name:
+          type: string
+          example: theUser
+        email:
+          type: string
+          example: john@email.com
+        date_of_birth:
+          type: string
+          format: ISO 8601
+          example: '2023-08-08T10:46:56.996Z'
+        bio:
+          type: string
+          example: bio
+        location:
+          type: string
+          example: location
+        website:
+          type: string
+          example: url website
+        username:
+          type: string
+          example: phanqkhanh
+        avatar:
+          type: string
+          example: url avatar
+        cover_photo:
+          type: string
+          example: url cover_photo
+    File:
+      type: string
+      format: binary
+    AuthToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRkOWViNWZhMmRlYjI5N2I4ZmEzMGE1IiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTI2MTk2NTgsImV4cCI6MTY5MzIyNDQ1OH0.o-e51KBLnfYIyunkJZtPQN9kQWALKkEFKQRIFUHad5M
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRkOWViNWZhMmRlYjI5N2I4ZmEzMGE1IiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTI2MTk2NTgsImV4cCI6MTY5MzIyNDQ1OH0.o-e51KBLnfYIyunkJZtPQN9kQWALKkEFKQRIFUHad5M
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
